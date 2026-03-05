@@ -5,11 +5,15 @@ public class Field {
     private int columnCount;
     private int countColors;
     private Cell[][] grid;
+    private GameState state;
+    private int moves;
+    private int maxMoves;
 
-    public Field(int rowCount, int columnCount, int countColors) {
+    public Field(int rowCount, int columnCount, int countColors, int maxMoves) {
         this.rowCount = rowCount;
         this.columnCount = columnCount;
         this.countColors = countColors;
+        this.maxMoves = maxMoves;
     }
 
     public void generate() {}
