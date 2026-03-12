@@ -11,14 +11,19 @@ public class Field {
     private GameState state;
     private int currentMoves;
     private int maxMoves;
+    private final Random random;
+
+    private static final int MIN_SIZE = 12;
+    private static final int MAX_SIZE = 22;
 
     public Field(int rowCount, int columnCount) {
-        if (rowCount < 12 || columnCount < 12) throw new IllegalArgumentException("Row or column count is smaller than 12!");
-        if (rowCount > 22 || columnCount > 22) throw new IllegalArgumentException("Row or column count is higher than 22!");
+        if (rowCount < MIN_SIZE || columnCount < MIN_SIZE) throw new IllegalArgumentException("Row or column count is smaller than 12!");
+        if (rowCount > MAX_SIZE || columnCount > MAX_SIZE) throw new IllegalArgumentException("Row or column count is higher than 22!");
         if (rowCount != columnCount) throw new IllegalArgumentException("Row and column must be equal!");
 
         this.rowCount = rowCount;
         this.columnCount = columnCount;
+        random = new Random();
     }
 
     public void generate() {
@@ -26,7 +31,6 @@ public class Field {
 
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < columnCount; j++) {
-                Random random = new Random();
                 grid[i][j] = new Cell(i, j, ColorType.values()[random.nextInt(ColorType.values().length)]);
             }
         }
@@ -37,7 +41,7 @@ public class Field {
     public void floodFill(int row, int column, ColorType newColor) {
         if (row < 0 || column < 0 || row >= rowCount || column >= columnCount || newColor == null) return;
 
-        if (grid[row][column].getColor() != newColor && grid[row][column] != null && grid[row][column].getColor() != null) {
+        if (grid[row][column].getColor() == grid[0][0].getColor() && grid[row][column] != null && grid[row][column].getColor() != null) {
             grid[row][column].setColor(newColor);
 
             floodFill(row + 1, column, newColor);
