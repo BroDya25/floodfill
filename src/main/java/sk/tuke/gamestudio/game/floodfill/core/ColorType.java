@@ -7,5 +7,5 @@ public enum ColorType {
     YELLOW,
     PURPLE,
     ORANGE,
-    PINK
+    PINK;
 }

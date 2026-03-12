@@ -11,7 +11,9 @@ public class Cell {
         this.color = color;
     }
 
-    public void setColor(ColorType color) {}
+    public void setColor(ColorType color) {
+        this.color = color;
+    }
 
     public ColorType getColor() { return color; }
 }
