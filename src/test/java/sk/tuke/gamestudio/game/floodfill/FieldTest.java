@@ -1,0 +1,129 @@
+package sk.tuke.gamestudio.game.floodfill;
+
+import org.junit.jupiter.api.Test;
+
+import static java.lang.Math.round;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import sk.tuke.gamestudio.game.floodfill.core.Cell;
+import sk.tuke.gamestudio.game.floodfill.core.ColorType;
+import sk.tuke.gamestudio.game.floodfill.core.Field;
+import sk.tuke.gamestudio.game.floodfill.core.GameState;
+
+import java.util.Random;
+import java.util.stream.Stream;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class FieldTest {
+    private final int rowCount;
+    private final int columnCount;
+    private final Field field;
+
+    public FieldTest() {
+        Random random = new Random();
+        rowCount = random.nextInt(10) + 12;
+        columnCount = rowCount;
+        field = new Field(rowCount, columnCount);
+    }
+
+    // Test Constructor //
+
+    @Test
+    public void fieldShouldThrowExceptionForInvalidDimensions() {
+        assertThrows(IllegalArgumentException.class, () -> new Field(11, 11),
+                "There must be an exception: size smaller than 12");
+        assertThrows(IllegalArgumentException.class, () -> new Field(23, 23),
+                "There must be an exception: size higher than 22");
+        assertThrows(IllegalArgumentException.class, () -> new Field(12, 16),
+                "There must be an exception: row != column");
+    }
+
+    @Test
+    public void fieldShouldBeCreatedWhenDimensionsAreCorrect() {
+        assertTrue(rowCount == field.getRowCount() || columnCount == field.getColumnCount(), "In the created field, the row count or the column count has a different value than in the argument");
+    }
+
+    // Test Generate //
+
+    @Test
+    public void checkFieldForNull() {
+        field.generate();
+        assertNotNull(field.getGrid(), "The field should not be null");
+    }
+
+    @Test
+    public void checkFieldForNullCells() {
+        field.generate();
+
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < columnCount; j++) {
+                assertNotNull(field.getGrid()[i][j], "Some cells of the array field have null values");
+            }
+        }
+    }
+
+    @Test
+    public void checkMaxMovesForField() {
+        field.generate();
+        assertEquals((int)round((double)(rowCount + columnCount) / 2 * 1.8), field.getMaxMoves(), "The field with row and column must have the following number of maximum moves according to the formula: (row + column) / 2 * 1.8");
+    }
+
+    // Test FloodFill //
+
+    @Test
+    public void floodFillInvalidCoordinatesShouldNotThrow() {
+        field.generate();
+
+        int[][] invalidCoordinates = {
+                {-1, 0},
+                {0, -1},
+                {rowCount, 0},
+                {0, columnCount}
+        };
+
+        for (int[] args : invalidCoordinates) {
+            assertDoesNotThrow(() -> field.floodFill(args[0], args[1], ColorType.RED));
+        }
+    }
+
+    @Test
+    public void floodFillNullColorShouldNotChangeField() {
+        field.generate();
+        ColorType currentColor = field.getGrid()[0][0].getColor();
+        field.floodFill(0, 0, null);
+
+        assertEquals(currentColor, field.getGrid()[0][0].getColor());
+    }
+
+    // Test GameState //
+
+    @Test
+    public void checkStateForPLAYING() {
+        field.generate();
+        assertEquals(GameState.PLAYING, field.checkState(), "Game state is not PLAYING");
+    }
+
+    @Test
+    public void checkStateForFAILED() {
+        field.generate();
+        field.setCurrentMoves(field.getMaxMoves());
+        assertEquals(GameState.FAILED, field.checkState(), "Game state is not FAILED");
+    }
+
+    @Test
+    public void checkStateForSOLVED() {
+        Cell[][] grid = field.getGrid();
+
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < columnCount; j++) {
+                grid[i][j] = new Cell(i, j, ColorType.RED);
+            }
+        }
+
+        assertEquals(GameState.SOLVED, field.checkState(), "Game state is not SOLVED");
+    }
+}
