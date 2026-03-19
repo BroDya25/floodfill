@@ -6,16 +6,12 @@ import static java.lang.Math.round;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import sk.tuke.gamestudio.game.floodfill.core.Cell;
 import sk.tuke.gamestudio.game.floodfill.core.ColorType;
 import sk.tuke.gamestudio.game.floodfill.core.Field;
 import sk.tuke.gamestudio.game.floodfill.core.GameState;
 
 import java.util.Random;
-import java.util.stream.Stream;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class FieldTest {
@@ -38,8 +34,6 @@ public class FieldTest {
                 "There must be an exception: size smaller than 12");
         assertThrows(IllegalArgumentException.class, () -> new Field(23, 23),
                 "There must be an exception: size higher than 22");
-        assertThrows(IllegalArgumentException.class, () -> new Field(12, 16),
-                "There must be an exception: row != column");
     }
 
     @Test
@@ -86,7 +80,7 @@ public class FieldTest {
         };
 
         for (int[] args : invalidCoordinates) {
-            assertDoesNotThrow(() -> field.floodFill(args[0], args[1], ColorType.RED));
+            assertDoesNotThrow(() -> field.floodFill(args[0], args[1], ColorType.RED, field.getGrid()[0][0].getColor()));
         }
     }
 
@@ -94,7 +88,7 @@ public class FieldTest {
     public void floodFillNullColorShouldNotChangeField() {
         field.generate();
         ColorType currentColor = field.getGrid()[0][0].getColor();
-        field.floodFill(0, 0, null);
+        field.floodFill(0, 0, null, field.getGrid()[0][0].getColor());
 
         assertEquals(currentColor, field.getGrid()[0][0].getColor());
     }
@@ -104,14 +98,16 @@ public class FieldTest {
     @Test
     public void checkStateForPLAYING() {
         field.generate();
-        assertEquals(GameState.PLAYING, field.checkState(), "Game state is not PLAYING");
+        field.checkState();
+        assertEquals(GameState.PLAYING, field.getState(), "Game state is not PLAYING");
     }
 
     @Test
     public void checkStateForFAILED() {
         field.generate();
         field.setCurrentMoves(field.getMaxMoves());
-        assertEquals(GameState.FAILED, field.checkState(), "Game state is not FAILED");
+        field.checkState();
+        assertEquals(GameState.FAILED, field.getState(), "Game state is not FAILED");
     }
 
     @Test
@@ -124,6 +120,8 @@ public class FieldTest {
             }
         }
 
-        assertEquals(GameState.SOLVED, field.checkState(), "Game state is not SOLVED");
+        field.checkState();
+
+        assertEquals(GameState.SOLVED, field.getState(), "Game state is not SOLVED");
     }
 }

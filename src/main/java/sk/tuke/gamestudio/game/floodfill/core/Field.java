@@ -19,10 +19,10 @@ public class Field {
     public Field(int rowCount, int columnCount) {
         if (rowCount < MIN_SIZE || columnCount < MIN_SIZE) throw new IllegalArgumentException("Row or column count is smaller than 12!");
         if (rowCount > MAX_SIZE || columnCount > MAX_SIZE) throw new IllegalArgumentException("Row or column count is higher than 22!");
-        if (rowCount != columnCount) throw new IllegalArgumentException("Row and column must be equal!");
 
         this.rowCount = rowCount;
         this.columnCount = columnCount;
+        this.state = GameState.PLAYING;
         random = new Random();
     }
 
@@ -38,29 +38,35 @@ public class Field {
         maxMoves = (int)round((double)(rowCount + columnCount) / 2 * 1.8);
     }
 
-    public void floodFill(int row, int column, ColorType newColor) {
-        if (row < 0 || column < 0 || row >= rowCount || column >= columnCount || newColor == null) return;
+    public void floodFill(int row, int col, ColorType newColor, ColorType oldColor) {
+        if (row < 0 || col < 0 || row >= rowCount || col >= columnCount || newColor == null || oldColor == null) return;
 
-        if (grid[row][column].getColor() == grid[0][0].getColor() && grid[row][column] != null && grid[row][column].getColor() != null) {
-            grid[row][column].setColor(newColor);
+        if (oldColor == grid[row][col].getColor() && newColor != oldColor && grid[row][col] != null && grid[row][col].getColor() != null) {
+            grid[row][col].setColor(newColor);
 
-            floodFill(row + 1, column, newColor);
-            floodFill(row - 1, column, newColor);
-            floodFill(row, column + 1, newColor);
-            floodFill(row, column - 1, newColor);
+            floodFill(row + 1, col, newColor, oldColor);
+            floodFill(row - 1, col, newColor, oldColor);
+            floodFill(row, col + 1, newColor, oldColor);
+            floodFill(row, col - 1, newColor, oldColor);
         }
     }
 
-    public GameState checkState() {
+    public void checkState() {
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < columnCount; j++) {
                  if (grid[0][0].getColor() != grid[i][j].getColor()) {
-                     return currentMoves == maxMoves ? GameState.FAILED : GameState.PLAYING;
+                     if (currentMoves >= maxMoves) {
+                         state = GameState.FAILED;
+                         return;
+                     } else {
+                         state = GameState.PLAYING;
+                         return;
+                     }
                  }
             }
         }
 
-        return GameState.SOLVED;
+        state = GameState.SOLVED;
     }
 
     public Cell getCell(int row, int column) {
@@ -79,6 +85,10 @@ public class Field {
         return columnCount;
     }
 
+    public GameState getState() {
+        return state;
+    }
+
     public int getCurrentMoves() {
         return currentMoves;
     }
@@ -89,5 +99,9 @@ public class Field {
 
     public void setCurrentMoves(int currentMoves) {
         this.currentMoves = currentMoves;
+    }
+
+    public void setGameState(GameState state) {
+        this.state = state;
     }
 }
