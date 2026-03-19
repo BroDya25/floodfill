@@ -101,7 +101,15 @@ public class Field {
         this.currentMoves = currentMoves;
     }
 
+    public void setMaxMoves(int maxMoves) {
+        this.maxMoves = maxMoves;
+    }
+
     public void setGameState(GameState state) {
         this.state = state;
+    }
+
+    public void setGrid(Cell[][] grid) {
+        this.grid = grid;
     }
 }

@@ -27,7 +27,7 @@ public class ConsoleUI {
 
         while (again) {
             field.generate();
-            field.setCurrentMoves(21);
+
             do {
                 render();
                 handleInput();
@@ -82,7 +82,7 @@ public class ConsoleUI {
         }
 
         System.out.println("  " + borderColor + " ".repeat(field.getColumnCount() * 3 + 4) + ColorType.RESET);
-        System.out.println("  " + borderColor + "\u001b[38;5;15m" + "  moves: " + field.getCurrentMoves() + "/" + field.getMaxMoves() + " ".repeat(field.getColumnCount() * 3 - 16) + field.getRowCount() + "x" + field.getColumnCount() + "  " + ColorType.RESET);
+        System.out.println("  " + borderColor + "\u001b[38;5;15m" + "  moves: " + field.getCurrentMoves() + "/" + field.getMaxMoves() + " ".repeat(field.getColumnCount() * 3 - 16 - (field.getCurrentMoves() > 9 ? 1 : 0)) + field.getRowCount() + "x" + field.getColumnCount() + "  " + ColorType.RESET);
     }
 
     public void renderHeader() {
