@@ -13,7 +13,6 @@ public class Field {
     private int maxMoves;
     private final Random random;
     private final long startTime;
-    private final FloodFillSolver floodFillSolver;
 
     private static final int MIN_SIZE = 12;
     private static final int MAX_SIZE = 22;
@@ -27,7 +26,6 @@ public class Field {
         this.grid = new Cell[rowCount][columnCount];
         this.state = GameState.PLAYING;
         this.maxMoves = (int)round((double)(rowCount + columnCount) / 2 * 1.8);
-        this.floodFillSolver = new FloodFillSolver();
         random = new Random();
         startTime = System.currentTimeMillis();
     }
