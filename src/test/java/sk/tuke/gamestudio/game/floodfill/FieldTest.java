@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import static java.lang.Math.round;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.TestInstance;
 import sk.tuke.gamestudio.game.floodfill.core.Cell;
 import sk.tuke.gamestudio.game.floodfill.core.ColorType;
 import sk.tuke.gamestudio.game.floodfill.core.Field;
@@ -13,7 +12,6 @@ import sk.tuke.gamestudio.game.floodfill.core.GameState;
 
 import java.util.Random;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class FieldTest {
     private final int rowCount;
     private final int columnCount;
