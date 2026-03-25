@@ -7,7 +7,7 @@ import java.util.*;
 public class Field {
     private final int rowCount;
     private final  int columnCount;
-    private Cell[][] grid;
+    private final Cell[][] grid;
     private GameState state;
     private int currentMoves;
     private final int maxMoves;
