@@ -10,7 +10,7 @@ public class Field {
     private Cell[][] grid;
     private GameState state;
     private int currentMoves;
-    private int maxMoves;
+    private final int maxMoves;
     private final Random random;
     private final long startTime;
 
