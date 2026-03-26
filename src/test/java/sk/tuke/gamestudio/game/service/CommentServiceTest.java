@@ -47,20 +47,6 @@ class CommentServiceJDBCTest {
     }
 
     @Test
-    public void testGetCommentsOrdersByCommentDesc() {
-        commentService.addComment(new Comment("FloodFill", "Player1", "A - Bad", new Date()));
-        commentService.addComment(new Comment("FloodFill", "Player2", "Z - Excellent", new Date()));
-        commentService.addComment(new Comment("FloodFill", "Player3", "M - Average", new Date()));
-
-        List<Comment> comments = commentService.getComments("FloodFill");
-
-        assertEquals(3, comments.size());
-        assertEquals("Z - Excellent", comments.get(0).getComment());
-        assertEquals("M - Average", comments.get(1).getComment());
-        assertEquals("A - Bad", comments.get(2).getComment());
-    }
-
-    @Test
     public void testGetCommentsForDifferentGames() throws Exception {
         commentService.addComment(new Comment("FloodFill", "Player1", "Bomb!", new Date()));
         commentService.addComment(new Comment("Tetris", "Player2", "Blocks!", new Date()));

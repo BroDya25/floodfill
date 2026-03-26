@@ -15,22 +15,34 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConsoleUI {
+    // Field
     private Field field;
     private final Scanner scanner = new Scanner(System.in);
+
+    // Regex
     private static final Pattern REGEXP1 = Pattern.compile("([a-z])([a-z])");
     private static final Pattern REGEXP2 = Pattern.compile("([0-9])([0-9])");
     private static final Pattern REGEXP3 = Pattern.compile("([1-5])");
-    private final String marginLeft = "  ";
+
+    // Booleans
     private boolean quitGame = false;
+    private boolean again = true;
     private boolean renderingMenu = true;
+    private boolean startGame = true;
+
+    // Services
     private final ScoreService scoreService = new ScoreServiceJDBC();
     private final CommentServiceJDBC commentService = new CommentServiceJDBC();
     private final RatingService ratingService = new RatingServiceJDBC();
+
+    // Strings
     private String betweenSpace;
     private String widthEndBorder;
     private String border;
-    private String name;
+    private final String marginLeft = "  ";
+    private final String userName;
 
+    // Constants
     private static final int MIN_SIZE = 12;
     private static final int MAX_SIZE = 22;
 
@@ -41,8 +53,8 @@ public class ConsoleUI {
     private final String borderShadow = "\u001B[48;5;245m";
     private final String whiteString = "\u001b[38;5;16m";
 
-    public ConsoleUI(String name) {
-        this.name = name;
+    public ConsoleUI(String userName) {
+        this.userName = userName;
     }
 
     // Menu
@@ -58,6 +70,7 @@ public class ConsoleUI {
             System.out.println(borderShadow + " " + borderColor + whiteString + marginLeft + "> RULES            " + borderShadow + " " + ColorType.RESET);
             System.out.println(borderShadow + " " + borderColor + whiteString + marginLeft + "> EXIT             " + borderShadow + " " + ColorType.RESET);
             System.out.println(borderShadow + " " + borderColor + "                     " + borderShadow + " " + ColorType.RESET);
+            System.out.println(borderShadow + " " + borderColor + whiteString + marginLeft + "Name: " + userName + " ".repeat(13 - userName.length()) + borderShadow + " " + ColorType.RESET);
 
             handleInputMenu();
         }
@@ -74,7 +87,7 @@ public class ConsoleUI {
             case "comments" -> renderComments();
             case "rating" -> renderRating();
             case "exit" -> {
-                System.out.println("\n" + "\u001B[38;5;48m" + marginLeft + "Thanks for playing! Goodbye.");
+                System.out.println("\n" + "\u001B[38;5;48m" + marginLeft + "Thanks for playing " + userName + "!" + " Goodbye.");
                 renderingMenu = false;
             }
             default ->
@@ -84,8 +97,33 @@ public class ConsoleUI {
 
     // Game
     private void play() {
-        boolean again = true;
+        if (startGame) startPlaying();
 
+        again = true;
+        quitGame = false;
+
+        while (again) {
+            do {
+                render();
+                handleInput();
+                if (quitGame) return;
+                field.checkState();
+            } while (field.getState() == GameState.PLAYING);
+
+            render();
+
+            if (field.getState() == GameState.SOLVED) {
+                System.out.println(greenString + marginLeft + "You won :)" + ColorType.RESET);
+                saveScore();
+            } else if (field.getState() == GameState.FAILED){
+                System.out.println(redString + marginLeft + "You lose :(" + ColorType.RESET);
+            }
+
+            enbDialogBox();
+        }
+    }
+
+    private void startPlaying() {
         int row;
         int col;
 
@@ -108,80 +146,63 @@ public class ConsoleUI {
             }
 
             System.out.println("\n" + "\u001B[38;5;9m" + "  Invalid input!" + ColorType.RESET);
-            System.out.println("  Must have between 12 and 22 sizes\n");
+            System.out.println("  Must have between 12 and 22 sizes");
         }
 
         field = new Field(row, col);
+        field.generate();
 
-        while (again) {
-            field.generate();
+        startGame = false;
+    }
 
-            do {
-                render();
-                handleInput();
-                if (quitGame) return;
-                field.checkState();
-                field.setGameState(GameState.SOLVED);
-            } while (field.getState() == GameState.PLAYING);
+    private void enbDialogBox() {
+        double rating = ratingService.getRating("FloodFill", userName);
 
-            render();
-
-            if (field.getState() == GameState.SOLVED) {
-                System.out.println(greenString + marginLeft + "You won :)" + ColorType.RESET);
-                saveScore();
-            } else if (field.getState() == GameState.FAILED){
-                System.out.println(redString + marginLeft + "You lose :(" + ColorType.RESET);
-            }
-
-            double rating = ratingService.getRating("FloodFill", name);
-
-            if (rating == 0) {
-                while (true) {
-                    System.out.print("\n" + marginLeft + "Rate the game (1-5) or press ENTER to skip: ");
-                    String rate = scanner.nextLine().trim().toLowerCase();
-
-                    if (REGEXP3.matcher(rate).matches()) {
-                        saveRating(Double.parseDouble(rate));
-                        break;
-                    } else {
-                        System.out.println("\n" + "\u001B[38;5;9m" + "  Invalid input!" + ColorType.RESET);
-                    }
-                }
-            }
-
-            System.out.print("\n" + marginLeft + "Leave a comment or press ENTER to skip: ");
-            String comment = scanner.nextLine().trim().toLowerCase();
-
-            if (!comment.isEmpty()) saveComment(comment);
-
+        if (rating == 0) {
             while (true) {
-                System.out.print("\n" + marginLeft + "Do you want to play again (Y/N)? ");
-                String line =  scanner.nextLine().trim().toLowerCase();
+                System.out.print("\n" + marginLeft + "Rate the game (1-5) or press ENTER to skip: ");
+                String rate = scanner.nextLine().trim().toLowerCase();
 
-                if (line.equals("y") || line.equals("yes")) {
+                if (REGEXP3.matcher(rate).matches()) {
+                    saveRating(Double.parseDouble(rate));
                     break;
-                } else if (line.equals("n") || line.equals("no")) {
-                    again = false;
+                } else if (!rate.isEmpty()) {
+                    System.out.println("\n" + "\u001B[38;5;9m" + "  Invalid input!" + ColorType.RESET);
+                } else {
                     break;
                 }
             }
+        }
 
-            field.setCurrentMoves(0);
-            field.setGameState(GameState.PLAYING);
+        System.out.print("\n" + marginLeft + "Leave a comment or press ENTER to skip: ");
+        String comment = scanner.nextLine().trim().toLowerCase();
+
+        if (!comment.isEmpty()) saveComment(comment);
+
+        while (true) {
+            System.out.print("\n" + marginLeft + "Do you want to play again (Y/N)? ");
+            String line =  scanner.nextLine().trim().toLowerCase();
+
+            if (line.equals("y") || line.equals("yes")) {
+                field.setCurrentMoves(0);
+                field.setGameState(GameState.PLAYING);
+                field.generate();
+                break;
+            } else if (line.equals("n") || line.equals("no")) {
+                again = false;
+                startGame = true;
+                break;
+            }
         }
     }
 
     private void render() {
         renderHeader();
         renderBody();
-        System.out.println("\n" + marginLeft + "State: " + (field.getState() == GameState.FAILED ? redString : greenString) + field.getState() + ColorType.RESET + "\n");
+        System.out.print("\n" + marginLeft + "State: " + (field.getState() == GameState.FAILED ? redString : greenString) + field.getState() + ColorType.RESET + "\n");
     }
 
     private void renderBody() {
-        String borderColor = "\u001B[48;5;247m";
-        String borderShadow = "\u001B[48;5;245m";
-        String whiteString = "\u001b[38;5;16m";
-
         System.out.println(marginLeft + borderColor + " ".repeat(field.getColumnCount() * 3 + 4) + ColorType.RESET);
         for (int i = 0; i < field.getRowCount(); i++) {
             System.out.print(((char) ('A' + i)) + " " + borderColor + " " + borderShadow + " " + ColorType.RESET);
@@ -207,7 +228,7 @@ public class ConsoleUI {
     }
 
     private void handleInput() {
-        System.out.print(marginLeft + "Enter command: ");
+        System.out.print("\n" + marginLeft + "Enter command: ");
         String line =  scanner.nextLine().trim().toLowerCase();
 
         if ("x".equals(line)) {
@@ -235,15 +256,15 @@ public class ConsoleUI {
     }
 
     public void saveScore() {
-        scoreService.addScore(new Score("FloodFill", name, field.getScore(), new Date()));
+        scoreService.addScore(new Score("FloodFill", userName, field.getScore(), new Date()));
     }
 
     public void saveComment(String comment) {
-        commentService.addComment(new Comment("FloodFill", name, comment, new Date()));
+        commentService.addComment(new Comment("FloodFill", userName, comment, new Date()));
     }
 
     public void saveRating(double rating) {
-        ratingService.setRating(new Rating("FloodFill", name, rating, new Date()));
+        ratingService.setRating(new Rating("FloodFill", userName, rating, new Date()));
     }
 
     // Score
@@ -264,7 +285,7 @@ public class ConsoleUI {
             System.out.printf(borderShadow + " " + borderColor + whiteString + " %d. " + (i+1 > 9 ? "" : " ") + "%s" + " ".repeat(columnPlayerTitle.length() + betweenSpace.length() - score.getPlayer().length()) + "%d" + " ".repeat(columnTitleScore.length() + widthEndBorder.length() - ("" + score.getPoints()).length()) + borderShadow + " " + ColorType.RESET + "\n", i + 1, score.getPlayer(), score.getPoints());
         }
 
-        System.out.println(border + "\n");
+        System.out.println(border);
     }
 
     // Comment
@@ -285,19 +306,19 @@ public class ConsoleUI {
             System.out.printf(borderShadow + " " + borderColor + whiteString + " %d. " + (i+1 > 9 ? "" : " ") + "%s" + " ".repeat(columnPlayerTitle.length() + betweenSpace.length() - comment.getPlayer().length()) + "%s" + " ".repeat(columnTitleScore.length() + widthEndBorder.length() - comment.getComment().length()) + borderShadow + " " + ColorType.RESET + "\n", i + 1, comment.getPlayer(), comment.getComment());
         }
 
-        System.out.println(border + "\n");
+        System.out.println(border);
     }
 
     // Rating
     private void renderRating() {
         double averageRating = Math.round(ratingService.getAverageRating("FloodFill") * 10.0) / 10.0;
-        double yourRating = Math.round(ratingService.getRating("FloodFill", name) * 10.0) / 10.0;
+        double yourRating = Math.round(ratingService.getRating("FloodFill", userName) * 10.0) / 10.0;
 
         System.out.println("\n" + borderShadow + " " + borderColor + marginLeft + "                     " + borderShadow + " " + ColorType.RESET);
         System.out.println(borderShadow + " " + borderColor + whiteString + marginLeft + "Average rating: " + averageRating + "  " + borderShadow + " " + ColorType.RESET);
         System.out.println(borderShadow + " " + borderColor + marginLeft + "                     " + borderShadow + " " + ColorType.RESET);
         System.out.println(borderShadow + " " + borderColor + whiteString + marginLeft + "Your rating: " + yourRating + "     " + borderShadow + " " + ColorType.RESET);
-        System.out.println(borderShadow + " " + borderColor + marginLeft + "                     " + borderShadow + " " + ColorType.RESET + "\n");
+        System.out.println(borderShadow + " " + borderColor + marginLeft + "                     " + borderShadow + " " + ColorType.RESET);
     }
 
     // Rules

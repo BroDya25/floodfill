@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Game {
 
+    private static String userName;
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -23,10 +24,20 @@ public class Game {
         System.out.println(art);
         System.out.println("\u001b[38;5;49m" + "                                     Welcome to the FloodFill!                                     " + ColorType.RESET);
         System.out.println("\u001B[38;5;50m" + ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" + ColorType.RESET);
-        System.out.print("\n  Enter your name: ");
-        String name = scanner.nextLine().trim().toLowerCase();
 
-        ConsoleUI console = new ConsoleUI(name);
+        while (true) {
+            System.out.print("\n  Enter your username: ");
+            userName = scanner.nextLine().trim().toLowerCase();
+
+            if (userName.length() < 10) {
+                break;
+            } else {
+                System.out.println("\n" + "\u001B[38;5;9m" + "Invalid username! The name length must not exceed 9 characters." + ColorType.RESET);
+            }
+        }
+
+
+        ConsoleUI console = new ConsoleUI(userName);
 
         console.renderMenu();
     }

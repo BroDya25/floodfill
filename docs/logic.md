@@ -81,3 +81,5 @@ Po skončení hry sú možné nasledujúce možnosti:
 - Povolené sú iba susediace bunky po stranách (žiadne uhlopriečky).
 - Každý ťah zmení farbu celej aktuálne prepojenej oblasti.
 - Cieľom hry je urobiť hraciu dosku monochromatickou v minimálnom počte ťahov.
+
+# Video GamePlay FloodFill - https://www.youtube.com/watch?v=Zapy1RRSxTs

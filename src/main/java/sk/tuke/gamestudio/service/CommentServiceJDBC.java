@@ -10,7 +10,7 @@ public class CommentServiceJDBC implements CommentService {
     public static final String URL = "jdbc:postgresql://localhost:5432/postgres";
     public static final String USER = "postgres";
     public static final String PASSWORD = "postgres";
-    public static final String SELECT = "SELECT game, player, comment, commentedOn FROM comment WHERE game = ? ORDER BY comment DESC LIMIT 10";
+    public static final String SELECT = "SELECT game, player, comment, commentedOn FROM comment WHERE game = ? ORDER BY commentedOn DESC LIMIT 10";
     public static final String DELETE = "DELETE FROM comment";
     public static final String INSERT = "INSERT INTO comment (game, player, comment, commentedOn) VALUES (?, ?, ?, ?)";
 

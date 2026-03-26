@@ -12,7 +12,7 @@ public class ScoreServiceJDBC implements ScoreService {
     public static final String PASSWORD = "postgres";
     public static final String SELECT = "SELECT game, player, points, playedOn FROM score WHERE game = ? ORDER BY points DESC LIMIT 10";
     public static final String DELETE = "DELETE FROM score";
-    public static final String INSERT = "INSERT INTO score (game, player, points, playedOn) VALUES (?, ?, ?, ?)";
+    public static final String INSERT = "INSERT INTO score (game, player, points, playedOn) VALUES (?, ?, ?, ?) " + "ON CONFLICT (game, player) DO UPDATE SET " + "points = EXCLUDED.points, " + "playedOn = EXCLUDED.playedOn " + "WHERE EXCLUDED.points > score.points";
 
     @Override
     public void addScore(Score score) {

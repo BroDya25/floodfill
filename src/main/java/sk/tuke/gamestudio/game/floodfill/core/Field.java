@@ -25,7 +25,7 @@ public class Field {
         this.columnCount = columnCount;
         this.grid = new Cell[rowCount][columnCount];
         this.state = GameState.PLAYING;
-        this.maxMoves = (int)round((double)(rowCount + columnCount) / 2 * 1.8);
+        this.maxMoves = (int)round((double)(rowCount + columnCount) / 2 * 2.2);
         random = new Random();
         startTime = System.currentTimeMillis();
     }
