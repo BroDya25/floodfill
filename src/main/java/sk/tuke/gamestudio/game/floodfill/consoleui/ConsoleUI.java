@@ -1,5 +1,6 @@
 package sk.tuke.gamestudio.game.floodfill.consoleui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import sk.tuke.gamestudio.entity.Comment;
 import sk.tuke.gamestudio.entity.Rating;
 import sk.tuke.gamestudio.entity.Score;
@@ -31,16 +32,21 @@ public class ConsoleUI {
     private boolean startGame = true;
 
     // Services
-    private final ScoreService scoreService = new ScoreServiceJDBC();
-    private final CommentServiceJDBC commentService = new CommentServiceJDBC();
-    private final RatingService ratingService = new RatingServiceJDBC();
+    @Autowired
+    private ScoreService scoreService;
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private RatingService ratingService;
 
     // Strings
     private String betweenSpace;
     private String widthEndBorder;
     private String border;
     private final String marginLeft = "  ";
-    private final String userName;
+    private String userName;
 
     // Constants
     private static final int MIN_SIZE = 12;
@@ -53,8 +59,14 @@ public class ConsoleUI {
     private final String borderShadow = "\u001B[48;5;245m";
     private final String whiteString = "\u001b[38;5;16m";
 
-    public ConsoleUI(String userName) {
-        this.userName = userName;
+    public ConsoleUI(ScoreService scoreService, CommentService commentService, RatingService ratingService) {
+        this.scoreService = scoreService;
+        this.commentService = commentService;
+        this.ratingService = ratingService;
+    }
+
+    public ConsoleUI() {
+
     }
 
     // Menu
@@ -108,6 +120,7 @@ public class ConsoleUI {
                 handleInput();
                 if (quitGame) return;
                 field.checkState();
+                field.setGameState(GameState.SOLVED);
             } while (field.getState() == GameState.PLAYING);
 
             render();
@@ -391,7 +404,7 @@ public class ConsoleUI {
                 borderColor + whiteString + marginLeft + "- Povolené sú iba susediace bunky po stranách (žiadne uhlopriečky).                        " + ColorType.RESET + "\n" +
                 borderColor + whiteString + marginLeft + "- Každý ťah zmení farbu celej aktuálne prepojenej oblasti.                                 " + ColorType.RESET + "\n" +
                 borderColor + whiteString + marginLeft + "- Cieľom hry je urobiť hraciu dosku monochromatickou v minimálnom počte ťahov.             " + ColorType.RESET + "\n" +
-                borderColor +  "                                                                                             " + ColorType.RESET + "\n");
+                borderColor +  "                                                                                             " + ColorType.RESET);
     }
 
     // Others
@@ -403,5 +416,9 @@ public class ConsoleUI {
         System.out.println("\n" + border);
         System.out.println(borderShadow + " " + ColorType.RESET + borderColor + whiteString + "     " + title1 + betweenSpace + title2 + widthEndBorder + borderShadow + " " + ColorType.RESET);
         System.out.println(border);
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

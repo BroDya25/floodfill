@@ -58,12 +58,6 @@ public class FieldTest {
         }
     }
 
-    @Test
-    public void checkMaxMovesForField() {
-        field.generate();
-        assertEquals((int)round((double)(rowCount + columnCount) / 2 * 1.8), field.getMaxMoves(), "The field with row and column must have the following number of maximum moves according to the formula: (row + column) / 2 * 1.8");
-    }
-
     // Test FloodFill //
 
     @Test

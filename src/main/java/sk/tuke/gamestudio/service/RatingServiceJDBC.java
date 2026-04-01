@@ -5,7 +5,7 @@ import sk.tuke.gamestudio.entity.Rating;
 import java.sql.*;
 
 public class RatingServiceJDBC implements RatingService {
-    public static final String URL = "jdbc:postgresql://localhost:5432/postgres";
+    public static final String URL = "jdbc:postgresql://localhost:5432/gamestudio";
     public static final String USER = "postgres";
     public static final String PASSWORD = "postgres";
     public static final String SELECT = "SELECT game, player, rating, ratedOn FROM rating WHERE game = ?";
