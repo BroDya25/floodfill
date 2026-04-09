@@ -9,8 +9,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@NamedQuery( name = "Rating.getAverageRating", query = "SELECT r.rating FROM Rating r WHERE r.game=:game")
-@NamedQuery( name = "Rating.getRating", query = "SELECT r.rating FROM Rating r WHERE r.game=:game AND r.player=:player")
+@NamedQuery( name = "Rating.getAverageRating", query = "SELECT AVG(r.rating) FROM Rating r WHERE r.game=:game")
+@NamedQuery( name = "Rating.getRating", query = "SELECT r FROM Rating r WHERE r.game=:game AND r.player=:player")
 @NamedQuery( name = "Rating.reset", query = "DELETE FROM Rating")
 public class Rating implements Serializable {
     @Id
@@ -51,7 +51,7 @@ public class Rating implements Serializable {
     public double getRating() {
         return rating;
     }
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 

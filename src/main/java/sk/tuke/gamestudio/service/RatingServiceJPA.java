@@ -5,6 +5,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import sk.tuke.gamestudio.entity.Rating;
 
+import java.util.List;
+
 @Transactional
 public class RatingServiceJPA implements RatingService {
 
@@ -18,12 +20,14 @@ public class RatingServiceJPA implements RatingService {
 
     @Override
     public double getAverageRating(String game) throws RatingException {
-        return entityManager.createNamedQuery("Rating.getAverageRating", Double.class).setParameter("game", game).getSingleResult();
+        Double result = entityManager.createNamedQuery("Rating.getAverageRating", Double.class).setParameter("game", game).getSingleResult();
+        return result == null ? 0 : result;
     }
 
     @Override
     public double getRating(String game, String player) throws RatingException {
-        return entityManager.createNamedQuery("Rating.getRating", Double.class).setParameter("game", game).setParameter("player", player).getSingleResult();
+        List<Rating> result = entityManager.createNamedQuery("Rating.getRating", Rating.class).setParameter("game", game).setParameter("player", player).getResultList();
+        return result.isEmpty() ? 0 : result.get(0).getRating();
     }
 
     @Override
