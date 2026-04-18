@@ -169,7 +169,7 @@ public class ConsoleUI {
     }
 
     private void enbDialogBox() {
-        double rating = ratingService.getRating("FloodFill", userName);
+        double rating = ratingService.getRating("floodfill", userName);
 
         if (rating == 0) {
             while (true) {
@@ -269,20 +269,20 @@ public class ConsoleUI {
     }
 
     public void saveScore() {
-        scoreService.addScore(new Score("FloodFill", userName, field.getScore(), new Date()));
+        scoreService.addScore(new Score("floodfill", userName, field.getScore(), new Date()));
     }
 
     public void saveComment(String comment) {
-        commentService.addComment(new Comment("FloodFill", userName, comment, new Date()));
+        commentService.addComment(new Comment("floodfill", userName, comment, new Date()));
     }
 
     public void saveRating(double rating) {
-        ratingService.setRating(new Rating("FloodFill", userName, rating, new Date()));
+        ratingService.setRating(new Rating("floodfill", userName, rating, new Date()));
     }
 
     // Score
     private void renderScores() {
-        List<Score> scores = scoreService.getTopScores("FloodFill");
+        List<Score> scores = scoreService.getTopScores("floodfill");
 
         if (scores.isEmpty()) return;
 
@@ -303,7 +303,7 @@ public class ConsoleUI {
 
     // Comment
     private void renderComments() {
-        List<Comment> comments = commentService.getComments("FloodFill");
+        List<Comment> comments = commentService.getComments("floodfill");
 
         if (comments.isEmpty()) return;
 
@@ -324,8 +324,8 @@ public class ConsoleUI {
 
     // Rating
     private void renderRating() {
-        double averageRating = Math.round(ratingService.getAverageRating("FloodFill") * 10.0) / 10.0;
-        double yourRating = Math.round(ratingService.getRating("FloodFill", userName) * 10.0) / 10.0;
+        double averageRating = Math.round(ratingService.getAverageRating("floodfill") * 10.0) / 10.0;
+        double yourRating = Math.round(ratingService.getRating("floodfill", userName) * 10.0) / 10.0;
 
         System.out.println("\n" + borderShadow + " " + borderColor + marginLeft + "                     " + borderShadow + " " + ColorType.RESET);
         System.out.println(borderShadow + " " + borderColor + whiteString + marginLeft + "Average rating: " + averageRating + "  " + borderShadow + " " + ColorType.RESET);

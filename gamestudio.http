@@ -1,4 +1,56 @@
-### GET request to example server
+// SCORE
+
+### addScore
+POST http://localhost:8080/api/score
+Content-Type: application/json
+
+{
+  "game": "floodfill",
+  "player": "ivan",
+  "points": 144,
+  "playedOn": "2026-04-16T13:35:13.898000"
+}
+
+### getTopScores
+GET http://localhost:8080/api/score/floodfill
+Content-Type: application/json
+
+// COMMENT
+
+### addComment
+POST http://localhost:8080/api/comment
+Content-Type: application/json
+
+{
+  "game": "floodfill",
+  "player": "ivan",
+  "comment": "good",
+  "commentedOn": "2026-04-16T13:35:13.898000"
+}
+
+### getComments
 GET http://localhost:8080/api/comment/floodfill
 Content-Type: application/json
+
+// RATING
+
+### setRating
+POST http://localhost:8080/api/rating
+Content-Type: application/json
+
+{
+  "game": "floodfill",
+  "player": "ivan",
+  "rating": 4,
+  "ratedOn": "2026-04-16T13:35:13.898000"
+}
+
+### getRating
+GET http://localhost:8080/api/rating/floodfill/ivan
+Content-Type: application/json
+
+### getAverageRating
+GET http://localhost:8080/api/rating/floodfill
+Content-Type: application/json
+
 ###
