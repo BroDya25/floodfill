@@ -28,6 +28,7 @@ public class Field {
         this.maxMoves = (int)round((double)(rowCount + columnCount) / 2 * 2.2);
         random = new Random();
         startTime = System.currentTimeMillis();
+        generate();
     }
 
     public void generate() {
@@ -94,7 +95,8 @@ public class Field {
     }
 
     public int getScore() {
-        return rowCount * columnCount - (int) (System.currentTimeMillis() - startTime) / 1000;
+        int points = rowCount * columnCount - (int) (System.currentTimeMillis() - startTime) / 1000;
+        return Math.max(points, 0);
     }
 
     public void setCurrentMoves(int currentMoves) {
