@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloodFill Game</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<script>
+    $(document).ready(function () {
+        $(document).on("click", ".color-picker a", function (e) {
+            e.preventDefault();
+            const url = $(this).attr("href").replace("/floodfill", "/floodfill/field");
+
+            $.ajax({
+                url: url
+            }).done(function (htmlFragment) {
+                $("#game-area").replaceWith(htmlFragment);
+            });
+        });
+
+        $(document).on("click", ".js-rating", function (e) {
+            e.preventDefault();
+            const url = $(this).attr("href");
+
+            $.ajax({
+                url: url,
+            }).done(function (htmlFragment) {
+                $("#rating-section").replaceWith(htmlFragment);
+            });
+        });
+
+        $(document).on("submit", "#ajax-comment-form", function (e) {
+            e.preventDefault();
+            const url = $(this).attr("action");
+            const formData = $(this).serialize();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData
+            }).done(function (htmlFragment) {
+                $("#comment-section").replaceWith(htmlFragment);
+            });
+        });
+    });
+</script>
+<body>
+<div class="page-wrapper">
+
+    <header class="game-header">
+        <h1>FloodFill</h1>
+        <p class="subtitle">Fill the entire board with one color!</p>
+    </header>
+
+    <div th:replace="~{fragments/field :: gameFragment}"></div>
+
+    <div class="services-area">
+
+        <section class="service-section">
+            <h2>🏆 Top Scores</h2>
+            <table class="service-table" th:if="${not #lists.isEmpty(topScores)}">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Points</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="score, stat : ${topScores}">
+                    <td th:text="${stat.index + 1}">1</td>
+                    <td th:text="${score.player}">Player</td>
+                    <td th:text="${score.points}">0</td>
+                    <td th:text="${#dates.format(score.playedOn, 'yyyy-MM-dd')}">2026-01-01</td>
+                </tr>
+                </tbody>
+            </table>
+            <p th:if="${#lists.isEmpty(topScores)}" class="empty-msg">No scores yet. Be the first!</p>
+        </section>
+
+        <div th:replace="~{fragments/services :: ratingFragment}"></div>
+        <div th:replace="~{fragments/services :: commentFragment}"></div>
+    </div>
+</div>
+</body>
+</html>

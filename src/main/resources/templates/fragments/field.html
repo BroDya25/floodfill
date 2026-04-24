@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<body>
+
+<div th:fragment="gameFragment" id="game-area" class="game-area">
+    <div class="status-bar">
+        <div class="moves-counter">
+            Moves: <strong th:text="${currentMoves}">0</strong> / <span th:text="${maxMoves}">0</span>
+        </div>
+
+        <div th:if="${gameState == 'SOLVED'}" class="game-message win">
+            🎉 You won! Congratulations!
+        </div>
+        <div th:if="${gameState == 'FAILED'}" class="game-message lose">
+            😞 Game over! No moves left.
+        </div>
+        <div th:if="${gameState == 'PLAYING'}" class="game-message playing">
+            Current color:
+            <span class="current-color-dot" th:classappend="${#strings.toLowerCase(currentColor)}"></span>
+            <span th:text="${currentColor}"></span>
+        </div>
+    </div>
+
+    <table class="game-field">
+        <tr th:each="row : ${field.grid}">
+            <td th:each="cell : ${row}"
+                class="cell"
+                th:classappend="${#strings.toLowerCase(cell.color.name())}"></td>
+        </tr>
+    </table>
+
+    <div th:if="${gameState == 'PLAYING'}" class="color-picker">
+        <a th:each="c : ${colors}"
+           th:href="@{/floodfill(color=${c.name()})}"
+           class="color-btn"
+           th:classappend="${#strings.toLowerCase(c.name())}"
+           th:title="${c.name()}"></a>
+    </div>
+
+    <div class="controls">
+        <a th:href="@{/floodfill/newGame}" class="btn btn-new">🔄 New Game</a>
+    </div>
+</div>
+
+</body>
+</html>

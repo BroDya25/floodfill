@@ -1,0 +1,271 @@
+/* ===== Base ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    min-height: 100vh;
+}
+
+.page-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ===== Header ===== */
+.game-header {
+    text-align: center;
+    padding: 24px 0 16px;
+}
+.game-header h1 {
+    font-size: 2.4rem;
+    color: #e0f7fa;
+    text-shadow: 0 0 18px #00bcd4;
+    letter-spacing: 3px;
+}
+.game-header .subtitle {
+    color: #90a4ae;
+    margin-top: 6px;
+    font-size: 0.95rem;
+}
+
+/* ===== Game area ===== */
+.game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+/* Status bar */
+.status-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 10px;
+    padding: 10px 24px;
+    width: 100%;
+    justify-content: center;
+}
+.moves-counter {
+    font-size: 1rem;
+    color: #b0bec5;
+}
+.moves-counter strong {
+    color: #4fc3f7;
+    font-size: 1.15rem;
+}
+.game-message {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.game-message.win   { color: #66bb6a; }
+.game-message.lose  { color: #ef5350; }
+.game-message.playing { color: #b0bec5; }
+
+.current-color-dot {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    vertical-align: middle;
+}
+
+/* ===== Game Field ===== */
+.field-container {
+    border: 3px solid #0f3460;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 188, 212, 0.15);
+}
+
+table.game-field {
+    border-collapse: collapse;
+    display: block;
+}
+table.game-field tr {
+    display: flex;
+}
+table.game-field td.cell {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(0,0,0,0.18);
+    transition: filter 0.1s;
+}
+table.game-field td.cell:hover {
+    filter: brightness(1.2);
+}
+
+/* ===== Color classes ===== */
+.red    { background-color: #e53935; }
+.blue   { background-color: #1e88e5; }
+.green  { background-color: #43a047; }
+.yellow { background-color: #fdd835; }
+.purple { background-color: #8e24aa; }
+.orange { background-color: #fb8c00; }
+.pink   { background-color: #e91e96; }
+
+/* ===== Color picker ===== */
+.color-picker {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.color-btn {
+    display: inline-block;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+    text-decoration: none;
+}
+.color-btn:hover {
+    transform: scale(1.2);
+    border-color: #fff;
+    box-shadow: 0 0 12px rgba(255,255,255,0.4);
+}
+
+/* ===== Controls ===== */
+.controls { display: flex; gap: 12px; }
+
+.btn {
+    display: inline-block;
+    padding: 10px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    border: none;
+}
+.btn-new {
+    background: #0f3460;
+    color: #e0f7fa;
+}
+.btn-new:hover { background: #1565c0; transform: translateY(-1px); }
+
+.btn-submit {
+    background: #00838f;
+    color: #fff;
+    padding: 8px 18px;
+    font-size: 0.88rem;
+}
+.btn-submit:hover { background: #00acc1; }
+
+/* ===== Services Area ===== */
+.services-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+.services-area .service-section:last-child {
+    grid-column: 1 / -1;
+}
+
+.service-section {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 12px;
+    padding: 20px;
+}
+.service-section h2 {
+    font-size: 1.1rem;
+    color: #80deea;
+    margin-bottom: 14px;
+    border-bottom: 1px solid #0f3460;
+    padding-bottom: 8px;
+}
+
+/* ===== Tables ===== */
+.service-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+.service-table th {
+    background: #0f3460;
+    color: #80deea;
+    padding: 7px 10px;
+    text-align: left;
+    font-weight: 600;
+}
+.service-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #1e2d4f;
+    color: #cfd8dc;
+}
+.service-table tr:hover td { background: #1a2a4a; }
+
+.empty-msg { color: #546e7a; font-style: italic; font-size: 0.88rem; }
+
+/* ===== Rating ===== */
+.avg-rating { font-size: 1rem; color: #b0bec5; margin-bottom: 10px; }
+.avg-rating strong { color: #ffd54f; font-size: 1.2rem; }
+
+.star-rating p { color: #90a4ae; font-size: 0.88rem; margin-bottom: 6px; }
+.star {
+    font-size: 1.8rem;
+    color: #37474f;
+    text-decoration: none;
+    transition: color 0.15s, transform 0.1s;
+    display: inline-block;
+}
+.star:hover, .star.filled { color: #ffd54f; }
+.star:hover { transform: scale(1.2); }
+
+/* ===== Comments ===== */
+.comments-list { margin-bottom: 16px; }
+.comment-item {
+    background: #1e2d4f;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+}
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+.comment-header strong { color: #80cbc4; font-size: 0.9rem; }
+.comment-date { color: #546e7a; font-size: 0.78rem; }
+.comment-item p { color: #cfd8dc; font-size: 0.88rem; line-height: 1.4; }
+
+.comment-form h3 { color: #80deea; font-size: 0.95rem; margin-bottom: 10px; }
+.comment-form input,
+.comment-form textarea {
+    width: 100%;
+    background: #1e2d4f;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    color: #e0e0e0;
+    padding: 8px 12px;
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+    font-family: inherit;
+    resize: vertical;
+}
+.comment-form input:focus,
+.comment-form textarea:focus {
+    outline: none;
+    border-color: #00bcd4;
+}
+
+@media (max-width: 640px) {
+    .services-area { grid-template-columns: 1fr; }
+    .services-area .service-section:last-child { grid-column: auto; }
+    table.game-field td.cell { width: 22px; height: 22px; }
+    .color-btn { width: 34px; height: 34px; }
+}
