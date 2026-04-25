@@ -28,7 +28,7 @@
 
         private static final String GAME_NAME = "floodfill";
         private String loggedUser = "Player_" + java.util.UUID.randomUUID().toString().substring(0, 5);
-        private static final int FIELD_SIZE = 14;
+        private int FIELD_SIZE = 14;
 
         private Field field = new Field(FIELD_SIZE, FIELD_SIZE);
 
@@ -71,6 +71,7 @@
 
         private void fillModel(Model model) {
             model.addAttribute("field",         field);
+            model.addAttribute("size",          FIELD_SIZE);
             model.addAttribute("gameState",     field.getState().name());
             model.addAttribute("currentMoves",  field.getCurrentMoves());
             model.addAttribute("maxMoves",      field.getMaxMoves());
@@ -88,6 +89,12 @@
             scoreSaved = false;
             fillModel(model);
             return "redirect:/floodfill";
+        }
+
+        @RequestMapping("/type")
+        public String type(@RequestParam int type, Model model) {
+            FIELD_SIZE = type;
+            return newGame(model);
         }
 
         @RequestMapping("/rating")

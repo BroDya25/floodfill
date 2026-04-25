@@ -4,30 +4,44 @@
 
 <div th:fragment="gameFragment" id="game-area" class="game-area">
     <div class="status-bar">
-        <div class="moves-counter">
-            Moves: <strong th:text="${currentMoves}">0</strong> / <span th:text="${maxMoves}">0</span>
-        </div>
+        <ul class="menu-bar">
+            <li>
+                <div class="menu">Field Type &darr;</div>
+                <ul>
+                    <li><a th:href="@{/floodfill/type(type=${12})}">12x12</a></li>
+                    <li><a th:href="@{/floodfill/type(type=${14})}">14x14</a></li>
+                    <li><a th:href="@{/floodfill/type(type=${16})}">16x16</a></li>
+                    <li><a th:href="@{/floodfill/type(type=${18})}">18x18</a></li>
+                    <li><a th:href="@{/floodfill/type(type=${20})}">20x20</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="log-bar">
+            <div class="moves-counter">
+                Moves: <strong th:text="${currentMoves}">0</strong> / <span th:text="${maxMoves}">0</span>
+            </div>
 
-        <div th:if="${gameState == 'SOLVED'}" class="game-message win">
-            🎉 You won! Congratulations!
-        </div>
-        <div th:if="${gameState == 'FAILED'}" class="game-message lose">
-            😞 Game over! No moves left.
-        </div>
-        <div th:if="${gameState == 'PLAYING'}" class="game-message playing">
-            Current color:
-            <span class="current-color-dot" th:classappend="${#strings.toLowerCase(currentColor)}"></span>
-            <span th:text="${currentColor}"></span>
+            <div th:if="${gameState == 'SOLVED'}" class="game-message win">
+                🎉 You won! Congratulations!
+            </div>
+            <div th:if="${gameState == 'FAILED'}" class="game-message lose">
+                😞 Game over! No moves left.
+            </div>
+            <div th:if="${gameState == 'PLAYING'}" class="game-message playing">
+                Current color:
+                <span class="current-color-dot" th:classappend="${#strings.toLowerCase(currentColor)}"></span>
+                <span th:text="${currentColor}"></span>
+            </div>
         </div>
     </div>
 
-    <table class="game-field">
-        <tr th:each="row : ${field.grid}">
-            <td th:each="cell : ${row}"
-                class="cell"
-                th:classappend="${#strings.toLowerCase(cell.color.name())}"></td>
-        </tr>
-    </table>
+    <div class="field-container">
+        <div class="game-field" th:style="'grid-template-columns: repeat(' + ${size} + ', 1fr)'">
+            <div th:each="row : ${field.grid}">
+                <div th:each="cell : ${row}" class="cell" th:classappend="${#strings.toLowerCase(cell.color.name())}"></div>
+            </div>
+        </div>
+    </div>
 
     <div th:if="${gameState == 'PLAYING'}" class="color-picker">
         <a th:each="c : ${colors}"

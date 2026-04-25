@@ -18,9 +18,11 @@ public class ScoreServiceJPA implements ScoreService {
         List<Score> existingScores = entityManager.createNamedQuery("Score.getScore", Score.class).setParameter("game", score.getGame()).setParameter("player", score.getPlayer()).getResultList();
 
         if (!existingScores.isEmpty()) {
-            Score existingScore = existingScores.get(0);
-            existingScore.setPoints(score.getPoints());
-            existingScore.setPlayedOn(score.getPlayedOn());
+            if (existingScores.get(0).getPoints() <= score.getPoints()) {
+                Score existingScore = existingScores.get(0);
+                existingScore.setPoints(score.getPoints());
+                existingScore.setPlayedOn(score.getPlayedOn());
+            }
         } else {
             entityManager.persist(score);
         }

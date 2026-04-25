@@ -45,6 +45,23 @@
             });
         });
     });
+
+    function openModal() {
+        document.getElementById('modalOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModalDirect() {
+        document.getElementById('modalOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    function closeModal(event) {
+        if (event.target === document.getElementById('modalOverlay')) {
+            closeModalDirect();
+        }
+    }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModalDirect();
+    });
 </script>
 <body>
 <div class="page-wrapper">
@@ -54,35 +71,124 @@
         <p class="subtitle">Fill the entire board with one color!</p>
     </header>
 
-    <div th:replace="~{fragments/field :: gameFragment}"></div>
+    <div class="game-container">
+        <div th:replace="~{fragments/field :: gameFragment}"></div>
 
-    <div class="services-area">
+        <div class="services-area">
+            <section class="service-section">
+                <h2>🏆 Top Scores</h2>
+                <table class="service-table" th:if="${not #lists.isEmpty(topScores)}">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Player</th>
+                        <th>Points</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="score, stat : ${topScores}">
+                        <td th:text="${stat.index + 1}">1</td>
+                        <td th:text="${score.player}">Player</td>
+                        <td th:text="${score.points}">0</td>
+                        <td th:text="${#dates.format(score.playedOn, 'yyyy-MM-dd')}">2026-01-01</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p th:if="${#lists.isEmpty(topScores)}" class="empty-msg">No scores yet. Be the first!</p>
+            </section>
 
-        <section class="service-section">
-            <h2>🏆 Top Scores</h2>
-            <table class="service-table" th:if="${not #lists.isEmpty(topScores)}">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Player</th>
-                    <th>Points</th>
-                    <th>Date</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="score, stat : ${topScores}">
-                    <td th:text="${stat.index + 1}">1</td>
-                    <td th:text="${score.player}">Player</td>
-                    <td th:text="${score.points}">0</td>
-                    <td th:text="${#dates.format(score.playedOn, 'yyyy-MM-dd')}">2026-01-01</td>
-                </tr>
-                </tbody>
-            </table>
-            <p th:if="${#lists.isEmpty(topScores)}" class="empty-msg">No scores yet. Be the first!</p>
-        </section>
+            <div th:replace="~{fragments/services :: ratingFragment}"></div>
+            <div th:replace="~{fragments/services :: commentFragment}"></div>
+        </div>
+    </div>
+</div>
 
-        <div th:replace="~{fragments/services :: ratingFragment}"></div>
-        <div th:replace="~{fragments/services :: commentFragment}"></div>
+<footer class="game-footer">
+    <div class="footer-inner">
+        <div class="footer-info">
+            <span class="footer-logo">FloodFill</span>
+            <span class="footer-sep">|</span>
+            <span>Component Programming &mdash; TUKE FEI</span>
+            <span class="footer-sep">|</span>
+            <span>&copy; 2026</span>
+        </div>
+        <button class="btn btn-instructions" onclick="openModal()">📖 Instructions</button>
+    </div>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+        <h2 class="modal-title">📖 Rules of the game</h2>
+
+        <div class="modal-body">
+            <div class="rules-intro">
+                The goal of the game is to paint <strong>the entire playing field one color</strong>
+                in a limited number of moves.
+            </div>
+
+            <div class="rules-steps">
+                <div class="rule-step">
+                    <div class="step-num">1</div>
+                    <div class="step-text">
+                        The game starts in <strong>the upper left corner</strong>.
+                        This corner is your "zone", which is gradually expanding.
+                    </div>
+                </div>
+                <div class="rule-step">
+                    <div class="step-num">2</div>
+                    <div class="step-text">
+                        Choose <strong>a color</strong> from the palette at the bottom of the playing field.
+                        All cells in your zone will change to the selected color.
+                    </div>
+                </div>
+                <div class="rule-step">
+                    <div class="step-num">3</div>
+                    <div class="step-text">
+                        If neighboring cells have <strong>the same color</strong>,
+                        as well as your zone - they join it.
+                    </div>
+                </div>
+                <div class="rule-step">
+                    <div class="step-num">4</div>
+                    <div class="step-text">
+                        Fill in <strong>the entire field</strong> with one color
+                        before you run out of moves - and you win!
+                    </div>
+                </div>
+                <div class="rule-step">
+                    <div class="step-num">5</div>
+                    <div class="step-text">
+                        If the move limit is reached and the field is not yet filled —
+                        <strong>the game is lost</strong>. Click "🔄 New Game" to try again.
+                    </div>
+                </div>
+            </div>
+
+            <div class="rules-colors">
+                <h3>Colors</h3>
+                <div class="colors-row">
+                    <span class="color-chip red"  title="Red"></span>
+                    <span class="color-chip blue"  title="Blue"></span>
+                    <span class="color-chip green"  title="Green"></span>
+                    <span class="color-chip yellow" title="Yellow"></span>
+                    <span class="color-chip purple" title="Purple"></span>
+                    <span class="color-chip orange" title="Orange"></span>
+                    <span class="color-chip pink"   title="Pink"></span>
+                </div>
+                <p>There are <strong>7 colors</strong>. Choose the one that will "capture" neighboring cells the most.</p>
+            </div>
+
+            <div class="rules-tips">
+                <h3>💡 Advice</h3>
+                <p>Start with the color that is most around your zone - this way you will capture more cells in one move and save moves!</p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-new" onclick="closeModalDirect()">Got it, play!</button>
+        </div>
     </div>
 </div>
 </body>
