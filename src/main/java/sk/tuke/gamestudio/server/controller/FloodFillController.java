@@ -27,7 +27,7 @@
     public class FloodFillController {
 
         private static final String GAME_NAME = "floodfill";
-        private String loggedUser = "Player_" + java.util.UUID.randomUUID().toString().substring(0, 5);
+        private final String loggedUser = "Player_" + java.util.UUID.randomUUID().toString().substring(0, 5);
         private int FIELD_SIZE = 14;
 
         private Field field = new Field(FIELD_SIZE, FIELD_SIZE);
@@ -80,13 +80,20 @@
             model.addAttribute("topScores",     scoreService.getTopScores(GAME_NAME));
             model.addAttribute("comments",      commentService.getComments(GAME_NAME));
             model.addAttribute("averageRating", ratingService.getAverageRating(GAME_NAME));
-            model.addAttribute("userRating", ratingService.getRating(GAME_NAME, loggedUser));
+            model.addAttribute("userRating",    ratingService.getRating(GAME_NAME, loggedUser));
         }
 
         @RequestMapping("/newGame")
         public String newGame(Model model) {
             field = new Field(FIELD_SIZE, FIELD_SIZE);
             scoreSaved = false;
+            fillModel(model);
+            return "redirect:/floodfill";
+        }
+
+        @RequestMapping("/restartGame")
+        public String restartGame(Model model) {
+            field.reset();
             fillModel(model);
             return "redirect:/floodfill";
         }

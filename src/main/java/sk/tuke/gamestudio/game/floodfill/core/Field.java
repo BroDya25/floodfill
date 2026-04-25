@@ -12,7 +12,8 @@ public class Field {
     private int currentMoves;
     private final int maxMoves;
     private final Random random;
-    private final long startTime;
+    private long startTime;
+    private ColorType[][] initialColors;
 
     private static final int MIN_SIZE = 12;
     private static final int MAX_SIZE = 22;
@@ -32,11 +33,26 @@ public class Field {
     }
 
     public void generate() {
+        initialColors = new ColorType[rowCount][columnCount];
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < columnCount; j++) {
-                grid[i][j] = new Cell(i, j, ColorType.values()[random.nextInt(ColorType.values().length)]);
+                ColorType color = ColorType.values()[random.nextInt(ColorType.values().length)];
+                grid[i][j] = new Cell(i, j, color);
+                initialColors[i][j] = color;   // зберігаємо знімок
             }
         }
+    }
+
+    public void reset() {
+        if (initialColors == null) return;
+        for (int i = 0; i < rowCount; i++) {
+            for (int j = 0; j < columnCount; j++) {
+                grid[i][j].setColor(initialColors[i][j]);
+            }
+        }
+        this.currentMoves = 0;
+        this.state = GameState.PLAYING;
+        this.startTime = System.currentTimeMillis();
     }
 
     public void floodFill(int row, int col, ColorType newColor, ColorType oldColor) {

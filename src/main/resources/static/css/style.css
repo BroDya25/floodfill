@@ -71,7 +71,7 @@ body {
 .menu {
     display: block;
     padding: 10px 24px;
-    color: #4fc3f7;
+    color: #80deea;
     font-size: 1rem;
 }
 .menu-bar li ul {
@@ -95,7 +95,7 @@ body {
 }
 .menu-bar li ul li a:hover {
     background: #1a2a4a;
-    color: #4fc3f7;
+    color: #80deea;
 }
 
 .log-bar {
@@ -189,7 +189,6 @@ body {
     box-shadow: 0 0 12px rgba(255,255,255,0.4);
 }
 
-/* ===== Controls ===== */
 .controls { display: flex; gap: 12px; }
 
 .btn {
@@ -204,10 +203,15 @@ body {
     border: none;
 }
 .btn-new {
+    background: transparent;
+    color: #80deea;
+    border: 1px solid #0f3460;
+}
+.btn-new:hover {
     background: #0f3460;
+    border-color: #00bcd4;
     color: #e0f7fa;
 }
-.btn-new:hover { background: #1565c0; transform: translateY(-1px); }
 
 .btn-submit {
     background: #00838f;
@@ -217,7 +221,24 @@ body {
 }
 .btn-submit:hover { background: #00acc1; }
 
-/* ===== Services Area ===== */
+.btn-instructions {
+    background: transparent;
+    border: 1px solid #0f3460;
+    color: #80deea;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+    font-family: inherit;
+}
+.btn-instructions:hover {
+    background: #0f3460;
+    border-color: #00bcd4;
+    color: #e0f7fa;
+}
+
 .services-area {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -348,29 +369,10 @@ body {
 .footer-logo {
     font-weight: 700;
     color: #80deea;
-    font-size: 1rem;
+    font-size: 1.1rem;
 }
 .footer-sep { color: #1e3a5f; }
 
-.btn-instructions {
-    background: transparent;
-    border: 1px solid #0f3460;
-    color: #80deea;
-    padding: 8px 18px;
-    border-radius: 8px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, color 0.2s;
-    font-family: inherit;
-}
-.btn-instructions:hover {
-    background: #0f3460;
-    border-color: #00bcd4;
-    color: #e0f7fa;
-}
-
-/* ===== Modal ===== */
 .modal-overlay {
     display: none;
     position: fixed;
