@@ -2,22 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<section th:fragment="ratingFragment" id="rating-section" class="service-section">
-    <h2>⭐ Rating</h2>
+<section th:fragment="ratingFragment" id="rating-section" class="service-section rating-section">
+    <h2>&#11088; Rating</h2>
     <p class="avg-rating">
         Average: <strong th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">0.0</strong> / 5
     </p>
-    <div class="star-rating">
+    <div class="star-rating" th:if="${!isGuest}">
         <p>Rate this game:</p>
         <span th:each="i : ${#numbers.sequence(1, 5)}">
             <a th:href="@{/floodfill/rating(rating=${i})}"
-               th:class="${i <= userRating} ? 'star filled js-rating' : 'star js-rating'">★</a>
+               th:class="${i <= userRating} ? 'star filled js-rating' : 'star js-rating'">&#9733;</a>
         </span>
+    </div>
+
+    <div class="guest-notice" th:if="${isGuest}">
+        <span class="guest-notice-icon">&#128274;</span>
+        <p><a href="/logout" class="guest-link">Sign in or register</a> to rate this game.</p>
     </div>
 </section>
 
-<section th:fragment="commentFragment" id="comment-section" class="service-section">
-    <h2>💬 Comments</h2>
+<section th:fragment="commentFragment" id="comment-section" class="service-section comment-section">
+    <h2>&#128172; Comments</h2>
     <div class="comments-list">
         <div class="comment-item" th:each="c : ${comments}">
             <div class="comment-header">
@@ -29,11 +34,16 @@
         <p th:if="${#lists.isEmpty(comments)}" class="empty-msg">No comments yet.</p>
     </div>
 
-    <form class="comment-form" id="ajax-comment-form" action="/floodfill/comment" method="post">
+    <form class="comment-form" th:if="${!isGuest}" id="ajax-comment-form" action="/floodfill/comment" method="post">
         <h3>Leave a comment</h3>
-        <textarea name="comment" placeholder="Write your comment..." maxlength="255" rows="3" required></textarea>
+        <textarea name="comment" placeholder="Write your comment..." maxlength="255" rows="2" required></textarea>
         <button type="submit" class="btn btn-submit">Post Comment</button>
     </form>
+
+    <div class="guest-notice" th:if="${isGuest}">
+        <span class="guest-notice-icon">&#128274;</span>
+        <p><a href="/logout" class="guest-link">Sign in or register</a> to leave a comment.</p>
+    </div>
 </section>
 
 </body>

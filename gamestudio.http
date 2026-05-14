@@ -54,3 +54,13 @@ GET http://localhost:8080/api/rating/floodfill
 Content-Type: application/json
 
 ###
+
+POST http://localhost:8080/api/user
+Content-Type: application/json
+
+{
+  "game": "floodfill",
+  "username": "ivan",
+  "password": "7413212",
+  "loggedOn": "2026-04-16T13:35:13.898000"
+}

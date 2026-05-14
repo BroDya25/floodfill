@@ -20,6 +20,17 @@
             });
         });
 
+        $(document).on("click", ".btn-nav:not(.btn-disabled), .menu-bar li ul li a", function (e) {
+            e.preventDefault();
+            const url = $(this).attr("href");
+
+            $.ajax({
+                url: url,
+            }).done(function (htmlFragment) {
+                $("#game-area").replaceWith(htmlFragment);
+            })
+        })
+
         $(document).on("click", ".js-rating", function (e) {
             e.preventDefault();
             const url = $(this).attr("href");
@@ -46,6 +57,17 @@
         });
     });
 
+    (function () {
+        var saved = localStorage.getItem('ff-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ff-theme', next);
+    }
+
     function openModal() {
         document.getElementById('modalOverlay').classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -66,36 +88,44 @@
 <body>
 <div class="page-wrapper">
 
+    <div th:text="${loggedUser}" class="username">Player</div>
+
+    <div class="login-theme-toggle">
+        <button class="btn btn-theme" id="themeToggle" title="Toggle theme" onclick="toggleTheme()"></button>
+    </div>
+
     <header class="game-header">
         <h1>FloodFill</h1>
-        <p class="subtitle">Fill the entire board with one color!</p>
+        <p class="subtitle">Fill all cells with one color!</p>
     </header>
 
     <div class="game-container">
         <div th:replace="~{fragments/field :: gameFragment}"></div>
 
         <div class="services-area">
-            <section class="service-section">
+            <section class="service-section scores-section">
                 <h2>🏆 Top Scores</h2>
-                <table class="service-table" th:if="${not #lists.isEmpty(topScores)}">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Player</th>
-                        <th>Points</th>
-                        <th>Date</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="score, stat : ${topScores}">
-                        <td th:text="${stat.index + 1}">1</td>
-                        <td th:text="${score.player}">Player</td>
-                        <td th:text="${score.points}">0</td>
-                        <td th:text="${#dates.format(score.playedOn, 'yyyy-MM-dd')}">2026-01-01</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <p th:if="${#lists.isEmpty(topScores)}" class="empty-msg">No scores yet. Be the first!</p>
+                <div class="scores-scroll">
+                    <table class="service-table" th:if="${not #lists.isEmpty(topScores)}">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Player</th>
+                            <th>Points</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="score, stat : ${topScores}">
+                            <td th:text="${stat.index + 1}">1</td>
+                            <td th:text="${score.player}">Player</td>
+                            <td th:text="${score.points}">0</td>
+                            <td th:text="${#dates.format(score.playedOn, 'yyyy-MM-dd')}">2026-01-01</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p th:if="${#lists.isEmpty(topScores)}" class="empty-msg">No scores yet. Be the first!</p>
+                </div>
             </section>
 
             <div th:replace="~{fragments/services :: ratingFragment}"></div>
@@ -109,11 +139,21 @@
         <div class="footer-info">
             <span class="footer-logo">FloodFill</span>
             <span class="footer-sep">|</span>
-            <span>Component Programming &mdash; TUKE FEI</span>
+            <span>Bohdan - TUKE FEI</span>
             <span class="footer-sep">|</span>
             <span>&copy; 2026</span>
         </div>
-        <button class="btn btn-instructions" onclick="openModal()">📖 Instructions</button>
+        <div class="btn-footer-container">
+            <button class="btn btn-instructions" onclick="openModal()">📖 Instructions</button>
+            <a href="/logout" class="btn btn-logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+                    <path d="M9 12h12l-3 -3" />
+                    <path d="M18 15l3 -3" />
+                </svg>
+                Logout
+            </a>
+        </div>
     </div>
 </footer>
 

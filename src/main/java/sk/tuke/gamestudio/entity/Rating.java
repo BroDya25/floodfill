@@ -1,9 +1,6 @@
 package sk.tuke.gamestudio.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;

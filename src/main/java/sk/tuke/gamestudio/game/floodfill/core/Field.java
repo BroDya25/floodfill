@@ -15,8 +15,14 @@ public class Field {
     private long startTime;
     private ColorType[][] initialColors;
 
+    private final Deque<ColorType[][]> undoStack = new ArrayDeque<>();
+    private final Deque<ColorType[][]> redoStack = new ArrayDeque<>();
+    private final Deque<Integer>       undoMoves = new ArrayDeque<>();
+    private final Deque<Integer>       redoMoves = new ArrayDeque<>();
+
     private static final int MIN_SIZE = 12;
     private static final int MAX_SIZE = 22;
+    private static final int MAX_HISTORY = 50;
 
     public Field(int rowCount, int columnCount) {
         if (rowCount < MIN_SIZE || columnCount < MIN_SIZE) throw new IllegalArgumentException("Row or column count is smaller than 12!");
@@ -38,9 +44,11 @@ public class Field {
             for (int j = 0; j < columnCount; j++) {
                 ColorType color = ColorType.values()[random.nextInt(ColorType.values().length)];
                 grid[i][j] = new Cell(i, j, color);
-                initialColors[i][j] = color;   // зберігаємо знімок
+                initialColors[i][j] = color;
             }
         }
+        undoStack.clear(); redoStack.clear();
+        undoMoves.clear(); redoMoves.clear();
     }
 
     public void reset() {
@@ -53,6 +61,54 @@ public class Field {
         this.currentMoves = 0;
         this.state = GameState.PLAYING;
         this.startTime = System.currentTimeMillis();
+        undoStack.clear(); redoStack.clear();
+        undoMoves.clear(); redoMoves.clear();
+    }
+
+    public void saveSnapshot() {
+        if (undoStack.size() >= MAX_HISTORY) {
+            undoStack.pollLast();
+            undoMoves.pollLast();
+        }
+        undoStack.push(captureColors());
+        undoMoves.push(currentMoves);
+        redoStack.clear();
+        redoMoves.clear();
+    }
+
+    public boolean canUndo() { return !undoStack.isEmpty(); }
+    public boolean canRedo() { return !redoStack.isEmpty(); }
+
+    public void undo() {
+        if (!canUndo()) return;
+        redoStack.push(captureColors());
+        redoMoves.push(currentMoves);
+        applyColors(undoStack.pop());
+        currentMoves = undoMoves.pop();
+        state = GameState.PLAYING;
+    }
+
+    public void redo() {
+        if (!canRedo()) return;
+        undoStack.push(captureColors());
+        undoMoves.push(currentMoves);
+        applyColors(redoStack.pop());
+        currentMoves = redoMoves.pop();
+        checkState();
+    }
+
+    private ColorType[][] captureColors() {
+        ColorType[][] snap = new ColorType[rowCount][columnCount];
+        for (int i = 0; i < rowCount; i++)
+            for (int j = 0; j < columnCount; j++)
+                snap[i][j] = grid[i][j].getColor();
+        return snap;
+    }
+
+    private void applyColors(ColorType[][] snap) {
+        for (int i = 0; i < rowCount; i++)
+            for (int j = 0; j < columnCount; j++)
+                grid[i][j].setColor(snap[i][j]);
     }
 
     public void floodFill(int row, int col, ColorType newColor, ColorType oldColor) {
