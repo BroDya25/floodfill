@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloodFill Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<script>
+    function togglePassword(btn) {
+        const input = btn.closest('.input-wrapper').querySelector('input');
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        btn.textContent = isHidden ? '🙈' : '👁';
+    }
+
+    (function () {
+        var saved = localStorage.getItem('ff-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    function toggleTheme() {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ff-theme', next);
+    }
+</script>
+<body class="login-page">
+<div class="login-wrapper">
+
+    <div class="login-card">
+
+        <div class="login-theme-toggle">
+            <button class="btn btn-theme" id="themeToggle" title="Toggle theme" onclick="toggleTheme()"></button>
+        </div>
+
+        <div class="login-logo">
+            <h1>FloodFill</h1>
+            <p>Log in or create an account</p>
+        </div>
+
+        <div class="login-error" th:if="${error}">
+            <span>⚠️</span>
+            <span th:text="${error}"></span>
+        </div>
+
+        <form class="login-form" action="/login" method="post">
+
+            <div class="form-group">
+                <label for="username">Login</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            th:value="${username}"
+                            placeholder="Enter your login"
+                            maxlength="50"
+                            autocomplete="username"
+                            autofocus
+                            required/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required/>
+                    <button type="button" class="toggle-password" onclick="togglePassword(this)" title="Show/hide password">👁</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-login">Login / Register</button>
+
+        </form>
+
+        <div class="login-divider">
+            <span>or</span>
+        </div>
+
+        <a href="/guest" class="btn btn-guest">👤 Continue as Guest</a>
+
+        <div class="login-hint">
+            <p>If you don't have an account yet, it will be created automatically.</p>
+            <p class="hint-guest">Guest progress is not saved to the leaderboard.</p>
+        </div>
+
+    </div>
+
+    <div class="login-decoration" aria-hidden="true">
+        <span class="deco-dot red"></span>
+        <span class="deco-dot blue"></span>
+        <span class="deco-dot green"></span>
+        <span class="deco-dot yellow"></span>
+        <span class="deco-dot purple"></span>
+        <span class="deco-dot orange"></span>
+        <span class="deco-dot pink"></span>
+    </div>
+
+</div>
+</body>
+</html>
