@@ -25,7 +25,7 @@ public class CommentServiceJPA implements CommentService {
 
     @Override
     public void reset() throws CommentException {
-        entityManager.createNamedQuery("Score.reset").executeUpdate();
+        entityManager.createNamedQuery("Comment.reset").executeUpdate();
     }
 
 }

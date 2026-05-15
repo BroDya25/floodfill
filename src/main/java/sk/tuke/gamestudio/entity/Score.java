@@ -1,15 +1,13 @@
 package sk.tuke.gamestudio.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"game", "player"}))
 @NamedQuery( name = "Score.getTopScores", query = "SELECT s FROM Score s WHERE s.game=:game ORDER BY s.points DESC LiMIT 10")
 @NamedQuery( name = "Score.getScore", query = "SELECT s FROM Score s WHERE s.game=:game AND s.player=:player")
 @NamedQuery( name = "Score.reset", query = "DELETE FROM Score")

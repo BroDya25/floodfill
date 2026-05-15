@@ -127,15 +127,15 @@ public class Field {
     public void checkState() {
         for (int i = 0; i < rowCount; i++) {
             for (int j = 0; j < columnCount; j++) {
-                 if (grid[0][0].getColor() != grid[i][j].getColor()) {
-                     if (currentMoves >= maxMoves) {
-                         state = GameState.FAILED;
-                         return;
-                     } else {
-                         state = GameState.PLAYING;
-                         return;
-                     }
-                 }
+                if (grid[0][0].getColor() != grid[i][j].getColor()) {
+                    if (currentMoves >= maxMoves) {
+                        state = GameState.FAILED;
+                        return;
+                    } else {
+                        state = GameState.PLAYING;
+                        return;
+                    }
+                }
             }
         }
 

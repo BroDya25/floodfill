@@ -82,4 +82,6 @@ Po skončení hry sú možné nasledujúce možnosti:
 - Každý ťah zmení farbu celej aktuálne prepojenej oblasti.
 - Cieľom hry je urobiť hraciu dosku monochromatickou v minimálnom počte ťahov.
 
-# Video GamePlay FloodFill - https://www.youtube.com/watch?v=Zapy1RRSxTs
+### Odovzdanie 1: logika hry a JDBC - https://www.youtube.com/watch?v=Zapy1RRSxTs
+### Odovzdanie 2: JPA + REST - https://www.youtube.com/watch?v=9jW6UnVWDP4
+### Odovzdanie 3: Web Game - https://youtu.be/orWQpC1tG2A

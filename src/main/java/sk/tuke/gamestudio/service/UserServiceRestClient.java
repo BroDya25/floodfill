@@ -14,7 +14,8 @@ public class UserServiceRestClient implements UserService {
 
     @Override
     public boolean loginOrRegister(User user) {
-        return restTemplate.getForObject(url + "/" + user.getUsername() + "/" + user.getPassword(), Boolean.class);
+        String hashedPassword = PasswordUtils.hashPassword(user.getPassword());
+        return restTemplate.getForObject(url + "/" + user.getUsername() + "/" + hashedPassword, Boolean.class);
     }
 
     @Override

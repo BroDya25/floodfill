@@ -58,3 +58,4 @@ Use the [standard Maven directory layout](https://maven.apache.org/guides/introd
 
 ### Odovzdanie 1: logika hry a JDBC - https://www.youtube.com/watch?v=Zapy1RRSxTs
 ### Odovzdanie 2: JPA + REST - https://www.youtube.com/watch?v=9jW6UnVWDP4
+### Odovzdanie 3: Web Game - https://youtu.be/orWQpC1tG2A

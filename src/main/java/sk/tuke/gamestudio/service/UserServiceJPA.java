@@ -15,11 +15,17 @@ public class UserServiceJPA implements UserService {
 
     @Override
     public boolean loginOrRegister(User user) throws UserException {
-        List<User> existingUsers = entityManager.createNamedQuery("User.getUser", User.class).setParameter("game", user.getGame()).setParameter("username", user.getUsername()).getResultList();
+        String hashedPassword = PasswordUtils.hashPassword(user.getPassword());
+
+        List<User> existingUsers = entityManager.createNamedQuery("User.getUser", User.class)
+                .setParameter("game", user.getGame())
+                .setParameter("username", user.getUsername())
+                .getResultList();
 
         if (!existingUsers.isEmpty()) {
-            return existingUsers.get(0).getPassword().equals(user.getPassword());
+            return existingUsers.get(0).getPassword().equals(hashedPassword);
         } else {
+            user.setPassword(hashedPassword);
             entityManager.persist(user);
             return true;
         }

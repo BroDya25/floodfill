@@ -127,7 +127,7 @@
                     field.setCurrentMoves(field.getCurrentMoves() + 1);
                     field.checkState();
 
-                    if (field.getState() == GameState.PLAYING && !scoreSaved) {
+                    if (field.getState() == GameState.SOLVED && !scoreSaved) {
                         boolean isGuest = loggedUser != null && loggedUser.startsWith("player_");
                         if (!isGuest) {
                             scoreService.addScore(new Score(GAME_NAME, loggedUser, field.getScore(), new Date()));
