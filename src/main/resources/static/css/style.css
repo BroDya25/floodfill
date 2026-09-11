@@ -276,6 +276,8 @@ body {
 }
 .color-btn {
     display: inherit;
+    width: 44px;
+    height: 44px;
     background: none;
     border-radius: 50%;
     cursor: pointer;
@@ -329,6 +331,7 @@ body {
     background: transparent;
     color: var(--accent-text);
     border: 1px solid var(--border);
+    text-align: center;
 }
 .btn-nav:hover {
     background: var(--border);
@@ -338,7 +341,6 @@ body {
 
 .btn-undo, .btn-redo {
     min-width: 80px;
-    text-align: center;
 }
 .btn-disabled {
     opacity: 0.3;
@@ -952,4 +954,54 @@ body.login-page {
     .services-area .service-section:last-child { grid-column: auto; }
     table.game-field td.cell { width: 22px; height: 22px; }
     .color-btn { width: 34px; height: 34px; }
+}
+
+@media (max-width: 470px) {
+    .username { font-size: 0.9rem; }
+
+    .login-wrapper { max-width: 300px }
+    .login-card { padding: 26px 22px 28px; }
+    .login-logo { margin-bottom: 18px; }
+    .login-logo h1 { font-size: 1.3rem }
+    .login-logo p { font-size: 0.65rem }
+
+    .form-group label { font-size: 0.7rem; }
+    .login-form input { padding: 7px 42px 7px 40px; font-size: 0.80rem; }
+
+    .btn { font-size: 0.80rem; padding: 7px 22px; }
+    .btn-login { font-size: 0.75rem; }
+    .btn-guest { font-size: 0.75rem; }
+    .btn-theme { font-size: 0.95rem; }
+
+    .login-hint { font-size: 0.55rem; margin-top: 0.35rem; }
+
+
+    .page-wrapper { padding: 50px 20px 20px 20px; }
+
+    .game-header h1 { font-size: 1.6rem; }
+    .game-header .subtitle { margin-top: 4px; font-size: 0.75rem; }
+
+    .menu, .moves-counter { padding: 7px 20px; }
+    .menu, .moves-counter, .moves-counter strong, .menu-bar li ul li a { font-size: 0.8rem; }
+
+    .field-container { width: 320px; height: 320px; }
+
+    .services-area { min-width: 320px; }
+    .service-section h2, .comment-form h3 { font-size: 0.9rem; }
+    .service-table { font-size: 0.7rem; }
+
+    .comment-header strong { font-size: 0.75rem; }
+    .comment-date, .comment-item p { font-size: 0.7rem; }
+    .comment-form input, .comment-form textarea { font-size: 0.7rem; }
+
+    .avg-rating { font-size: 0.75rem; }
+    .avg-rating strong { font-size: 0.95rem; }
+    .star-rating p { font-size: 0.8rem; }
+
+    .guest-notice-icon { font-size: 0.95rem; }
+    .guest-notice p { font-size: 0.7rem; line-height: 1rem; }
+
+    .footer-info { font-size: 0.7rem; }
+
+    .btn-instructions, .btn-logout { font-size: 0.7rem; padding: 7px 18px; }
 }
