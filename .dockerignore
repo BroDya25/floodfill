@@ -1,0 +1,7 @@
+.git
+.idea
+target
+design
+*.iml
+*.md
+*.http

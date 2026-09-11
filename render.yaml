@@ -1,0 +1,15 @@
+# Render Blueprint (https://render.com/docs/blueprint-spec)
+# После пуша в GitHub/GitLab: Render Dashboard -> New -> Blueprint -> выбрать репозиторий.
+# Значение JDBC_DATABASE_URL спросит при первом создании (sync: false).
+services:
+  - type: web
+    name: floodfill-game
+    runtime: docker
+    plan: free            # 0.1 CPU / 512 MB, засыпание после 15 мин простоя
+    region: frankfurt     # ближайший регион к Словакии/Украине
+    healthCheckPath: /
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JDBC_DATABASE_URL
+        sync: false       # секрет: строка подключения к Neon, вводится вручную
